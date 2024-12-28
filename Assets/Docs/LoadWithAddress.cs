@@ -11,10 +11,11 @@ public class LoadWithAddress : MonoBehaviour
     private AsyncOperationHandle<GameObject> handle;
 
     // Start the load operation on start
-     public void LoadWithAdressMeth()
+    public void LoadWithAdressMeth()
     {
         handle = Addressables.LoadAssetAsync<GameObject>(address);
         handle.Completed += Handle_Completed;
+   
     }
 
     // Instantiate the loaded prefab on complete
@@ -22,7 +23,7 @@ public class LoadWithAddress : MonoBehaviour
     {
         if (operation.Status == AsyncOperationStatus.Succeeded)
         {
-            Instantiate(operation.Result, transform);
+            Instantiate(operation.Result, null);
         }
         else
         {
@@ -34,5 +35,18 @@ public class LoadWithAddress : MonoBehaviour
     private void OnDestroy()
     {
         handle.Release();
+    }
+
+    public void PosCenter(GameObject[] go)
+    {
+        foreach (GameObject go2 in go) 
+        {
+            if (go2 != null) 
+            {
+                go2.transform.position = Vector3.zero; 
+                go2.transform.SetParent(null); 
+            }
+        }
+        
     }
 }

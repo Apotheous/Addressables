@@ -22,7 +22,7 @@ public class LoadAddress : MonoBehaviour
         if (opHandle.Status == AsyncOperationStatus.Succeeded)
         {
             GameObject obj = opHandle.Result;
-            Instantiate(obj, transform);
+            Instantiate(obj, null);
         }
     }
 

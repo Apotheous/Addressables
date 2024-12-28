@@ -19,7 +19,7 @@ public class LoadWithReference : MonoBehaviour
     {
         if (obj.Status == AsyncOperationStatus.Succeeded)
         {
-            Instantiate(reference.Asset, transform);
+            Instantiate(reference.Asset, null);
         }
         else
         {

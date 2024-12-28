@@ -32,7 +32,7 @@ public class LoadWithLabels : MonoBehaviour
                     Instantiate<GameObject>(addressable,
                         new Vector3(x++ * 2.0f, 0, z * 2.0f),
                         Quaternion.identity,
-                        transform);
+                        null);
                     if (x > 9)
                     {
                         x = 0;
