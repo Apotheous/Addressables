@@ -16,7 +16,12 @@ MonoBehaviour:
   m_GUID: 9f22d92963868fb4a803cdbafae66ac4
   m_SerializeEntries:
   - m_GUID: 122ecc4e6e37c5045bf007b5b389b3c1
-    m_Address: Plane
+    m_Address: Assets/Plane.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 59f8ce7f2ff142c4ea009e46e946aee1
+    m_Address: Assets/Cube.prefab
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
