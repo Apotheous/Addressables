@@ -8,7 +8,7 @@ public class LoadWithReference : MonoBehaviour
     public AssetReference reference;
 
     // Start the load operation on start
-    void Start()
+    public void LoadWithReferenceMeth()
     {
         AsyncOperationHandle handle = reference.LoadAssetAsync<GameObject>();
         handle.Completed += Handle_Completed;
