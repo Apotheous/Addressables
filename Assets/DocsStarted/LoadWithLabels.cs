@@ -35,7 +35,7 @@ public class LoadWithLabels : MonoBehaviour
 #if UNITY_ANDROID
                             string androidCachePath = Path.Combine(cachePath, "Android");
                             Debug.Log("+-+-" + $"Asset '{assetPath}' loaded from cache");
-                            DebugTextManager.WriteText("+-+-" + $"Cache Directory: {androidCachePath}");
+                            DebugTextManager.WriteText("+-+-Using = " + $"Cache Directory: {androidCachePath}");
 
                             try
                             {
@@ -61,13 +61,13 @@ public class LoadWithLabels : MonoBehaviour
                         }
                         else
                         {
-                            DebugTextManager.WriteText("+-+-" + $"Asset '{assetPath}' downloading from server. Size: {sizeOperation.Result / 1024f:F2} KB");
+                            DebugTextManager.WriteText("+-+-Downloading" + $"Asset '{assetPath}' downloading from server. Size: {sizeOperation.Result / 1024f:F2} KB");
                         }
 
                         // Release the operation handle
                         Addressables.Release(loadInfo);
                     };
-
+                    
                     GameObject instance = Instantiate<GameObject>(addressable,
                         new Vector3(x++ * 2.0f, 0, z * 2.0f),
                         Quaternion.identity,

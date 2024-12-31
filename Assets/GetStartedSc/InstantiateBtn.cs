@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 
-public class Manager : MonoBehaviour
+public class InstantiateBtn : MonoBehaviour
 {
     [SerializeField] private GameObject go;
 
