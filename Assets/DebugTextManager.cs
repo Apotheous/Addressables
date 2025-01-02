@@ -4,7 +4,7 @@ using TMPro;
 public class DebugTextManager : MonoBehaviour
 {
     [SerializeField] static TextMeshProUGUI m_TextMeshPro;
-
+    
     private void Start()
     {
         m_TextMeshPro = GetComponent<TextMeshProUGUI>();
@@ -13,6 +13,4 @@ public class DebugTextManager : MonoBehaviour
     {
         m_TextMeshPro.text = text;
     }
-
-
 }

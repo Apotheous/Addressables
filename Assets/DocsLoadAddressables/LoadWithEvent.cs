@@ -6,7 +6,7 @@ public class LoadWithEvent : MonoBehaviour
 {
     public string address;
     AsyncOperationHandle<GameObject> opHandle;
-
+    
     public void BtnClick()
     {
         // Create operation
@@ -19,7 +19,7 @@ public class LoadWithEvent : MonoBehaviour
     {
         if (obj.Status == AsyncOperationStatus.Succeeded)
         {
-            Instantiate(obj.Result, transform);
+            Instantiate(obj.Result, null);
         }
         else
         {

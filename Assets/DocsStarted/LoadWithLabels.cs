@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -9,20 +10,18 @@ public class LoadWithLabels : MonoBehaviour
 {
     public List<string> keys = new List<string>() { "characters", "animals" };
     AsyncOperationHandle<IList<GameObject>> loadHandle;
-
+    [SerializeField] TextManager textManager;
     public void BtnClick()
     {
         float x = 0, z = 0;
-        Debug.Log("Starting to load addressable assets...");
+        textManager.PublicWriteText("Starting to load addressable assets...");
 
-        loadHandle = Addressables.LoadAssetsAsync<GameObject>(
-            keys,
-            addressable =>
-            {
+        loadHandle = Addressables.LoadAssetsAsync<GameObject>(keys,addressable =>{
                 if (addressable != null)
                 {
-                    var assetPath = addressable.name;
+                var assetPath = addressable.name;
                     var loadInfo = Addressables.GetDownloadSizeAsync(assetPath);
+                    textManager.PublicWriteText("+-+-Using = " + $"Cache Directory: {loadInfo}");
                     loadInfo.Completed += (sizeOperation) =>
                     {
                         if (sizeOperation.Result == 0)
@@ -34,8 +33,8 @@ public class LoadWithLabels : MonoBehaviour
                             // Android specific cache path
 #if UNITY_ANDROID
                             string androidCachePath = Path.Combine(cachePath, "Android");
-                            Debug.Log("+-+-" + $"Asset '{assetPath}' loaded from cache");
-                            DebugTextManager.WriteText("+-+-Using = " + $"Cache Directory: {androidCachePath}");
+                            textManager.PublicWriteText("+-+-" + $"Asset '{assetPath}' loaded from cache");
+                            //DebugTextManager.WriteText("+-+-Using = " + $"Cache Directory: {cachePath}");
 
                             try
                             {
@@ -46,14 +45,14 @@ public class LoadWithLabels : MonoBehaviour
                                     {
                                         if (file.Contains(assetPath))
                                         {
-                                            Debug.Log("+-+-" + $"Found cached file at: {file}");
+                                            textManager.PublicWriteText("+-+-" + $"Found cached file at: {file}");
                                         }
                                     }
                                 }
                             }
                             catch (System.Exception e)
                             {
-                                Debug.LogWarning($"Could not search cache directory: {e.Message}");
+                                textManager.PublicWriteText($"Could not search cache directory: {e.Message}");
                             }
 #else
                             Debug.Log("+-+-" + $"Asset '{assetPath}' loaded from cache at: {cachePath}");
@@ -61,17 +60,14 @@ public class LoadWithLabels : MonoBehaviour
                         }
                         else
                         {
-                            DebugTextManager.WriteText("+-+-Downloading" + $"Asset '{assetPath}' downloading from server. Size: {sizeOperation.Result / 1024f:F2} KB");
+                            textManager.PublicWriteText("+-+-Downloading" + $"Asset '{assetPath}' downloading from server. Size: {sizeOperation.Result / 1024f:F2} KB");
                         }
 
                         // Release the operation handle
                         Addressables.Release(loadInfo);
                     };
                     
-                    GameObject instance = Instantiate<GameObject>(addressable,
-                        new Vector3(x++ * 2.0f, 0, z * 2.0f),
-                        Quaternion.identity,
-                        null);
+                    GameObject instance = Instantiate<GameObject>(addressable,new Vector3(x++ * 2.0f, 0, z * 2.0f),Quaternion.identity,null);
 
                     if (x > 9)
                     {
@@ -84,21 +80,24 @@ public class LoadWithLabels : MonoBehaviour
             false);
 
         loadHandle.Completed += LoadHandle_Completed;
+
+        StartCoroutine(DelayedRelease());
+
     }
 
     private void LoadHandle_Completed(AsyncOperationHandle<IList<GameObject>> operation)
     {
         if (operation.Status != AsyncOperationStatus.Succeeded)
         {
-            Debug.LogError($"Failed to load addressable assets. Status: {operation.Status}");
+            textManager.PublicWriteText($"Failed to load addressable assets. Status: {operation.Status}");
             if (operation.OperationException != null)
             {
-                Debug.LogError($"Error details: {operation.OperationException.Message}");
+                textManager.PublicWriteText($"Error details: {operation.OperationException.Message}");
             }
         }
         else
         {
-            Debug.Log("Successfully loaded all addressable assets");
+            textManager.PublicWriteText("Successfully loaded all addressable assets");
 
             if (operation.Result != null)
             {
@@ -106,7 +105,7 @@ public class LoadWithLabels : MonoBehaviour
                 var catalogPath = Path.Combine(Application.persistentDataPath, "com.unity.addressables", "catalog.json");
                 if (File.Exists(catalogPath))
                 {
-                    Debug.Log("+-+-" + $"Addressables catalog found at: {catalogPath}");
+                    textManager.PublicWriteText("+-+-" + $"Addressables catalog found at: {catalogPath}");
                 }
 
                 foreach (var result in operation.Result)
@@ -115,7 +114,7 @@ public class LoadWithLabels : MonoBehaviour
                     downloadSizeHandle.Completed += handle =>
                     {
                         bool isCached = handle.Result == 0;
-                        Debug.Log("+-+-" + $"Asset '{result.name}' is {(isCached ? "cached" : "not cached")}");
+                        textManager.PublicWriteText("+-+-" + $"Asset '{result.name}' is {(isCached ? "cached" : "not cached")}");
                         Addressables.Release(handle);
                     };
                 }
@@ -123,8 +122,9 @@ public class LoadWithLabels : MonoBehaviour
         }
     }
 
-    private void OnDestroy()
+    private IEnumerator DelayedRelease()
     {
+        yield return new WaitForSeconds(5f); // 5 saniye bekle
         if (loadHandle.IsValid())
         {
             Addressables.Release(loadHandle);
@@ -132,10 +132,4 @@ public class LoadWithLabels : MonoBehaviour
     }
 }
 
-/*
- * 
- *         // Varsayýlan önbellek yolunu al
-        string cachePath = Caching.currentCacheForWriting.path;
-        
-        DebugTextManager.WriteText( cachePath );
- * */
+
